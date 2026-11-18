@@ -1,10 +1,14 @@
 # Tamiz
 
+**English** · [Español](README.es.md)
+
 **Manage ModSecurity / OWASP CRS exclusions across many WAFs from one web interface.**
 
 Tamiz keeps every rule exclusion in one place, organised by application, with its reason and review date. It writes them to each WAF over SSH, the Docker API, a mounted directory or a downloadable bundle. It validates before and after, reloads, checks that the rules were actually loaded, and restores the previous files if anything fails.
 
 > Status: **alpha** (0.1.0). Tested end to end against nginx + libmodsecurity 3 and Apache + mod_security2 with the OWASP CRS. Some paths are not yet tested against real systems: see [Not tested yet](#not-tested-yet).
+
+![Tamiz overview: the state of every WAF, what needs attention and recent activity](.github/screenshot.png)
 
 - [What it does](#what-it-does)
 - [How it works](#how-it-works)
@@ -107,6 +111,8 @@ What lives where:
 | `/keys` | SSH private keys and Docker client certificates, read only | `./keys` |
 | `/waf/…` | WAF directories for the local transport (optional) | whatever you mount |
 | `/var/run/docker.sock` | Docker transport (optional, read [Security](#security) first) | the host's socket |
+
+The database lives in the `tamiz-data` volume, not inside the container: it survives the container crashing, restarting or being rebuilt. It is only deleted with `docker compose down -v` or if you remove the volume.
 
 ## Configuration
 
