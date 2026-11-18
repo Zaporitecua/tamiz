@@ -1,0 +1,133 @@
+/* View-specific styles. The load-order stack is the one deliberately bold
+   element of the interface: the files the WAF reads, drawn as a stack of
+   sieves, with the CRS as woven mesh and Tamiz's files as polished steel rims. */
+
+@layer views {
+  /* --------------------------------------------------------- login ----- */
+  .auth-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+  .auth-card { width: min(400px, 100%); }
+  .auth-card .brand { padding: 0 0 28px; }
+  .auth-card h1 { margin-bottom: 6px; }
+  .auth-card > p { color: var(--ink-2); }
+  .auth-card form { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
+
+  /* ------------------------------------------------------ dashboard ---- */
+  .hero-line { font-size: var(--fs-hero); font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; max-width: 26ch; margin: 4px 0 10px; }
+  .hero-line .ok { color: var(--ok); }
+  .hero-line .pending { color: var(--pending); }
+  .hero-line .error { color: var(--rust); }
+  .hero-sub { color: var(--ink-2); max-width: 60ch; }
+
+  .target-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--surface); }
+  .target-cell { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; position: relative; }
+  .target-cell:hover { background: var(--sunken); }
+  .target-cell .name { font-weight: 600; color: var(--ink); }
+  .target-cell .meta { font-size: var(--fs-xs); color: var(--ink-2); }
+  .target-cell::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--state-color, var(--line)); }
+  .target-cell[data-state="in_sync"] { --state-color: var(--ok); }
+  .target-cell[data-state="pending"] { --state-color: var(--pending); }
+  .target-cell[data-state="blocked"], .target-cell[data-state="error"] { --state-color: var(--rust); }
+
+  .figures { display: flex; gap: 32px; flex-wrap: wrap; margin: 18px 0 0; }
+  .figures div { display: flex; flex-direction: column; }
+  .figures b { font-size: var(--fs-xl); font-weight: 600; line-height: 1.1; }
+  .figures span { font-size: var(--fs-xs); color: var(--ink-2); }
+
+  .activity { list-style: none; margin: 0; padding: 0; }
+  .activity li { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-sm); }
+  .activity li:last-child { border-bottom: 0; }
+  .activity time { color: var(--ink-3); font-size: var(--fs-xs); padding-top: 2px; }
+  .activity .who { font-weight: 600; }
+  .activity .bad { color: var(--rust); }
+
+  /* --------------------------------------------- load-order sieve stack -- */
+  .stack-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; align-items: start; }
+  @media (max-width: 980px) { .stack-wrap { grid-template-columns: 1fr; } }
+  .sieves { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .sieve {
+    display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 12px;
+    padding: 8px 14px 8px 0; border-radius: var(--r-sm);
+    background: var(--surface); border: 1px solid var(--line);
+  }
+  .sieve .ord { font-family: var(--mono); font-size: var(--fs-xs); color: var(--ink-3); text-align: right; }
+  .sieve .path { font-family: var(--mono); font-size: var(--fs-sm); overflow-wrap: anywhere; }
+  .sieve .path b { font-weight: 600; }
+  .sieve .why { font-size: var(--fs-xs); color: var(--ink-2); text-align: right; }
+  .sieve.depth-1 { margin-left: 18px; }
+  .sieve.depth-2 { margin-left: 36px; }
+  .sieve.depth-3 { margin-left: 54px; }
+  .sieve.missing .path { color: var(--ink-3); text-decoration: line-through; }
+
+  /* The CRS: woven mesh. Consecutive CRS rule files collapse into one band. */
+  .sieve.crs {
+    min-height: 92px; align-items: center;
+    border-color: var(--line-strong);
+    background:
+      repeating-linear-gradient(45deg, var(--mesh) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(-45deg, var(--mesh) 0 1px, transparent 1px 7px),
+      var(--surface);
+  }
+  .sieve.crs .path { font-family: var(--font); font-weight: 600; background: var(--surface); padding: 2px 8px; border-radius: var(--r-sm); justify-self: start; }
+  .sieve.crs-slot { border-style: dashed; }
+
+  /* Tamiz's own files: a polished steel rim. */
+  .sieve.managed { border: 2px solid var(--steel); background: var(--steel-tint); box-shadow: inset 6px 0 0 var(--steel); }
+  .sieve.managed.wrong { border-color: var(--rust); background: var(--rust-tint); box-shadow: inset 6px 0 0 var(--rust); }
+  .sieve.managed .why { color: var(--steel-ink); font-weight: 600; }
+  .sieve.managed.wrong .why { color: var(--rust); }
+  .stack-legend { font-size: var(--fs-sm); color: var(--ink-2); }
+  .stack-legend dl { display: grid; grid-template-columns: 26px 1fr; gap: 10px 10px; margin: 12px 0 0; align-items: center; }
+  .stack-legend dt { height: 18px; border-radius: 3px; border: 1px solid var(--line-strong); background: var(--surface); }
+  .stack-legend dt.crs { background: repeating-linear-gradient(45deg, var(--mesh) 0 1px, transparent 1px 5px), repeating-linear-gradient(-45deg, var(--mesh) 0 1px, transparent 1px 5px), var(--surface); }
+  .stack-legend dt.managed { border: 2px solid var(--steel); background: var(--steel-tint); }
+  .stack-legend dt.wrong { border: 2px solid var(--rust); background: var(--rust-tint); }
+  .stack-legend dd { margin: 0; }
+
+  /* ------------------------------------------------------- plan/diff ---- */
+  .file-op { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); margin-bottom: 12px; overflow: hidden; }
+  .file-op > header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .file-op > header .mono { font-size: var(--fs-sm); overflow-wrap: anywhere; }
+  .file-op .units { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; font-size: var(--fs-sm); }
+  .file-op .diff { border: 0; border-top: 1px solid var(--line); border-radius: 0; max-height: 420px; overflow: auto; }
+  .file-op.blocked { border-color: var(--rust); }
+  .plan-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); margin-bottom: 16px; }
+  .plan-bar .summary { font-size: var(--fs-lg); font-weight: 600; }
+
+  /* ------------------------------------------------- exclusion form ---- */
+  .conditions { display: flex; flex-direction: column; gap: 8px; }
+  .cond { display: grid; grid-template-columns: 34px minmax(150px, 1.25fr) minmax(120px, 0.85fr) minmax(140px, 1.25fr) 32px; gap: 6px; align-items: center; }
+  .cond .neg { display: grid; place-items: center; }
+  .cond .neg label { display: grid; place-items: center; width: 34px; height: 36px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); cursor: pointer; font-family: var(--mono); font-weight: 600; color: var(--ink-3); }
+  .cond .neg input { position: absolute; opacity: 0; }
+  .cond .neg input:checked + span { color: var(--rust); }
+  .cond-join { font-size: var(--fs-xs); color: var(--ink-3); padding-left: 42px; }
+  @media (max-width: 760px) { .cond { grid-template-columns: 34px minmax(0, 1fr) 32px; } .cond > :nth-child(3), .cond > :nth-child(4) { grid-column: 2; } .cond > button { grid-column: 3; grid-row: 1; } }
+  .listbox { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px; min-height: 40px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: var(--surface); }
+  .listbox .chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 8px; border-radius: var(--r-sm); background: var(--sunken); font-family: var(--mono); font-size: var(--fs-xs); }
+  .listbox .chip button { border: 0; background: transparent; cursor: pointer; color: var(--ink-3); padding: 0 4px; font-size: 14px; line-height: 1; }
+  .listbox input { flex: 1 1 140px; border: 0; background: transparent; min-height: 26px; padding: 0 4px; font-family: var(--mono); font-size: var(--fs-sm); }
+  .listbox input:focus { outline: none; }
+  .listbox:focus-within { border-color: var(--steel); box-shadow: 0 0 0 3px var(--steel-tint); }
+  .preview-pane { display: flex; flex-direction: column; gap: 14px; }
+  .placement-note { font-size: var(--fs-sm); color: var(--ink-2); }
+
+  /* ------------------------------------------------------- analyzer ---- */
+  .finding { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; }
+  .finding + .finding { margin-top: 10px; }
+  .finding h3 { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .finding .where { font-family: var(--mono); font-size: var(--fs-sm); overflow-wrap: anywhere; }
+  .finding .counts { text-align: right; font-size: var(--fs-sm); }
+  .finding .counts b { display: block; font-size: var(--fs-lg); }
+  .finding .samples { grid-column: 1 / -1; }
+  .finding .actions { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .finding.covered { opacity: 0.72; }
+
+  /* --------------------------------------------------------- import ---- */
+  .proposal { display: grid; grid-template-columns: 24px minmax(0, 1fr) 220px; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--line); align-items: start; }
+  .proposal:last-child { border-bottom: 0; }
+  .proposal .code { padding: 8px 10px; font-size: var(--fs-xs); }
+  @media (max-width: 860px) { .proposal { grid-template-columns: 24px 1fr; } .proposal > :last-child { grid-column: 2; } }
+
+  /* ------------------------------------------------------- settings ---- */
+  .token-reveal { word-break: break-all; }
+}

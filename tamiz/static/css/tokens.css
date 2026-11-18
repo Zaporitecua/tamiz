@@ -1,0 +1,127 @@
+/* Design tokens.
+   Palette: graphite and polished steel, the materials of a lab sieve (a
+   steel rim around a steel mesh). The accent is the steel itself, with a
+   metallic sheen on the few pieces that are Tamiz's own: the primary button,
+   the mark, Tamiz's files in the load order. State colours follow oxidation:
+   verdigris = in sync, steel blue = pending, ochre = warning, rust = drift or
+   error.
+   Dark is the default theme; :root[data-theme="light"] is the alternative.
+   Type: Atkinson Hyperlegible (Braille Institute, OFL). Chosen because rule
+   IDs, paths and hashes need unambiguous 0/O, 1/l/I. */
+
+@layer tokens, base, components, views, utilities;
+
+@font-face {
+  font-family: "Atkinson Next";
+  src: url("../fonts/atkinson-hyperlegible-next-latin-400-normal.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Next";
+  src: url("../fonts/atkinson-hyperlegible-next-latin-600-normal.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Next";
+  src: url("../fonts/atkinson-hyperlegible-next-latin-700-normal.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Mono";
+  src: url("../fonts/atkinson-hyperlegible-mono-latin-400-normal.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Mono";
+  src: url("../fonts/atkinson-hyperlegible-mono-latin-600-normal.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+
+@layer tokens {
+  /* Shared by both themes. */
+  :root {
+    --font: "Atkinson Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "Atkinson Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+    --fs-xs: 0.8125rem;   /* 13px */
+    --fs-sm: 0.875rem;    /* 14px */
+    --fs-md: 0.9375rem;   /* 15px, body */
+    --fs-lg: 1.125rem;    /* 18px */
+    --fs-xl: 1.5rem;      /* 24px */
+    --fs-2xl: 2rem;       /* 32px */
+    --fs-hero: clamp(1.75rem, 3.4vw, 2.6rem);
+
+    --r-sm: 4px;
+    --r-md: 8px;
+    --rail: 220px;
+    --gap: 16px;
+
+    --focus: 0 0 0 2px var(--surface), 0 0 0 4px var(--steel);
+  }
+
+  /* Dark (default). */
+  :root {
+    color-scheme: dark;
+    --paper: #151a1f;
+    --surface: #1c2329;
+    --sunken: #11161a;
+    --ink: #e4e9ec;
+    --ink-2: #a2aeb8;
+    --ink-3: #8a96a1;
+    --line: #2d3740;
+    --line-strong: #43505b;
+
+    --steel: #aab4bd;          /* rims, borders, focus */
+    --steel-edge: #7d8892;
+    --steel-ink: #b8c4ce;      /* links and accented text */
+    --steel-tint: #2e3841;     /* selected backgrounds */
+    --steel-on: #11171c;       /* text on the sheen */
+    --steel-sheen: linear-gradient(180deg, #e3e8ec 0%, #b9c2ca 46%, #a3adb6 54%, #ccd3d9 100%);
+    --steel-ring: conic-gradient(from 210deg, #f1f4f6, #8f9aa4 25%, #dce2e7 50%, #7c8792 75%, #f1f4f6);
+
+    --ok: #5cbba7;
+    --ok-tint: #1d3832;
+    --pending: #7fb0db;
+    --pending-tint: #1c2d3c;
+    --warn: #e2a25a;
+    --warn-tint: #3b2c1b;
+    --rust: #e57e69;
+    --rust-tint: #3d221e;
+
+    --mesh: rgba(228, 233, 236, 0.12);
+    --shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 10px 28px -10px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Light. */
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --paper: #eceff1;
+    --surface: #f7f8f9;
+    --sunken: #e2e6e9;
+    --ink: #1b242c;
+    --ink-2: #4b5661;
+    --ink-3: #5c6772;
+    --line: #c9d0d6;
+    --line-strong: #a9b3bb;
+
+    --steel: #6b7782;
+    --steel-edge: #4f5a64;
+    --steel-ink: #3f4b56;
+    --steel-tint: #d8dee4;
+    --steel-on: #ffffff;
+    --steel-sheen: linear-gradient(180deg, #6a7681 0%, #56626c 46%, #4f5b65 54%, #626e79 100%);
+    --steel-ring: conic-gradient(from 210deg, #a9b3bc, #4f5a64 25%, #8d98a2 50%, #46515b 75%, #a9b3bc);
+
+    --ok: #266d5e;
+    --ok-tint: #d9ece7;
+    --pending: #2e6490;
+    --pending-tint: #dbe7f1;
+    --warn: #8c5111;
+    --warn-tint: #f4e3cd;
+    --rust: #a33a2a;
+    --rust-tint: #f4dcd7;
+
+    --mesh: rgba(27, 36, 44, 0.16);
+    --shadow: 0 1px 0 rgba(27, 36, 44, 0.06), 0 6px 20px -8px rgba(27, 36, 44, 0.25);
+  }
+}

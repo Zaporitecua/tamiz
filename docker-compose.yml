@@ -1,0 +1,28 @@
+# Tamiz. Copy .env.example to .env, put SSH keys in ./keys, then:
+#   docker compose up -d --build
+#   docker compose logs tamiz | grep "setup code"     # first administrator
+services:
+  tamiz:
+    build: .
+    image: tamiz:latest
+    container_name: tamiz
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      # Only on localhost: publish it through a reverse proxy with TLS
+      # (examples/nginx-reverse-proxy.conf). Change to "8080:8080" to expose it.
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - tamiz-data:/data          # database and secret.key: back them up together
+      - ./keys:/keys:ro           # SSH private keys, readable by uid 10001
+
+      # Optional, only for the Docker transport (WAF containers on this host).
+      # It gives Tamiz control over every container: read the security notes.
+      # - /var/run/docker.sock:/var/run/docker.sock
+
+      # Optional, only for the local transport: the WAF's exclusion directory
+      # shared with Tamiz. Paths must be under TAMIZ_LOCAL_ROOTS (/waf).
+      # - /etc/nginx/modsec/tamiz:/waf/tamiz
+
+volumes:
+  tamiz-data:

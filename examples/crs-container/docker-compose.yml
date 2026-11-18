@@ -1,0 +1,36 @@
+# Lab: the official CRS container image (nginx + libmodsecurity 3) managed by
+# Tamiz through the Docker API. NOT TESTED against the real image: check the
+# paths in the target (Load order tab) the first time.
+#
+#   docker compose up -d
+#   docker compose logs tamiz | grep "setup code"
+#   open http://localhost:8080 and add a target with the platform
+#   "OWASP CRS container image", container "waf".
+services:
+  app:
+    image: traefik/whoami
+  waf:
+    image: owasp/modsecurity-crs:nginx
+    container_name: waf
+    environment:
+      BACKEND: http://app:80
+      MODSEC_RULE_ENGINE: "On"
+    ports:
+      - "8081:8080"
+    volumes:
+      # Tamiz writes its files here; the image loads plugins/*-before.conf
+      # before the CRS rules and plugins/*-after.conf after them.
+      - plugins:/etc/modsecurity.d/owasp-crs/plugins
+  tamiz:
+    build: ../..
+    environment:
+      TAMIZ_AUTH_MODE: local
+    user: "0"            # read the Docker socket; or add the socket's group instead
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - tamiz-data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  plugins:
+  tamiz-data:

@@ -1,0 +1,30 @@
+# Variables de entorno reales: la copia de .env.example con contraseñas,
+# TAMIZ_SECRET_KEY, etc. Solo se sube .env.example, que no tiene valores.
+.env
+
+# Llaves SSH privadas y certificados con los que Tamiz entra a los servidores.
+keys/
+
+# Datos de Tamiz: la base SQLite y secret.key, la llave que descifra las
+# credenciales guardadas. Es lo más sensible del proyecto.
+data/
+
+# Código compilado que Python genera solo al ejecutar. Se regenera y depende
+# de la versión de Python de cada máquina.
+__pycache__/
+*.pyc
+
+# Caché de pytest (qué pruebas fallaron la última vez). Es local de cada máquina.
+.pytest_cache/
+
+# Instrucciones para las sesiones de Claude Code. Son para tu copia local:
+# no se publican en GitHub.
+CLAUDE.md
+
+# Entorno virtual con los paquetes instalados. Pesa mucho y se recrea con
+# pip install -r requirements-dev.txt.
+.venv/
+
+# WAF de mentira para probar con el transporte local (TAMIZ_LOCAL_ROOTS=$PWD/waf).
+# Lo que hay adentro lo escribe Tamiz mientras pruebas.
+waf/
