@@ -24,7 +24,7 @@ sed -i 's/<VirtualHost \*:80>/<VirtualHost *:8081>/' /etc/apache2/sites-availabl
 echo "ServerName lab.local" > /etc/apache2/conf-enabled/servername.conf
 
 cat >> /etc/sudoers.d/tamiz <<'EOF'
-tamiz ALL=(root) NOPASSWD: /usr/sbin/apachectl -t, /usr/sbin/apachectl -t -D DUMP_INCLUDES, /usr/sbin/apachectl graceful, /usr/bin/tail -c * -- /var/log/apache2/modsec_audit.log, /usr/bin/tail -c * -- /var/log/apache2/error.log
+tamiz ALL=(root) NOPASSWD: /usr/sbin/apachectl -t, /usr/sbin/apachectl -t -D DUMP_INCLUDES, /usr/sbin/apachectl graceful, /usr/bin/tail ^-c [0-9]+ -- /var/log/apache2/modsec_audit\.log$, /usr/bin/tail ^-c [0-9]+ -- /var/log/apache2/error\.log$
 EOF
 visudo -cf /etc/sudoers.d/tamiz
 apachectl -t && (apachectl graceful 2>/dev/null || apachectl start)

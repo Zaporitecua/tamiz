@@ -231,7 +231,8 @@ The form shows a sudoers line for that target. Copy it to the WAF host, for exam
 
 ```text
 tamiz ALL=(root) NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -s reload, /usr/sbin/nginx -T, \
-    /usr/bin/tail -c * -- /var/log/modsec_audit.log, /usr/bin/tail -c * -- /var/log/nginx/error.log, \
+    /usr/bin/tail ^-c [0-9]+ -- /var/log/modsec_audit\.log$, \
+    /usr/bin/tail ^-c [0-9]+ -- /var/log/nginx/error\.log$, \
     /usr/bin/true
 ```
 
@@ -241,6 +242,8 @@ sudo visudo -cf /etc/sudoers.d/tamiz
 ```
 
 Use full paths (`command -v nginx`). `examples/sudoers-tamiz` has the Apache variant.
+
+The `tail` lines are regular expressions (`^…$`, sudo 1.9.10 or later; check with `sudo --version`). Don't replace them with `tail -c * -- <log>`: in sudoers a `*` also matches spaces, so `tail -c 1 /etc/shadow -- <log>` would match and the `tamiz` user could read any file as root. With an older sudo (RHEL/Oracle Linux 7 and 8, and 9 before 9.8, ship 1.9.5 or older), leave the `tail` lines out: everything else works, but Tamiz can't read that target's logs.
 
 ### 4. Diagnosis
 

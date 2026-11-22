@@ -40,7 +40,7 @@ chmod 700 /home/tamiz/.ssh && chmod 600 /home/tamiz/.ssh/authorized_keys
 
 # sudo_mode "commands" needs the first line; sudo_mode "all" needs /usr/bin/sh.
 cat > /etc/sudoers.d/tamiz <<'EOF'
-tamiz ALL=(root) NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -T, /usr/sbin/nginx -s reload, /usr/bin/tail -c * -- /var/log/modsec_audit.log, /usr/bin/tail -c * -- /var/log/nginx/error.log, /usr/bin/true, /usr/bin/sh
+tamiz ALL=(root) NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -T, /usr/sbin/nginx -s reload, /usr/bin/tail ^-c [0-9]+ -- /var/log/modsec_audit\.log$, /usr/bin/tail ^-c [0-9]+ -- /var/log/nginx/error\.log$, /usr/bin/true, /usr/bin/sh
 EOF
 chmod 440 /etc/sudoers.d/tamiz && visudo -cf /etc/sudoers.d/tamiz
 

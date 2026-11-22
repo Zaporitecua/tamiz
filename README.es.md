@@ -231,7 +231,8 @@ El formulario muestra una línea de sudoers para ese destino. Cópiala al servid
 
 ```text
 tamiz ALL=(root) NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -s reload, /usr/sbin/nginx -T, \
-    /usr/bin/tail -c * -- /var/log/modsec_audit.log, /usr/bin/tail -c * -- /var/log/nginx/error.log, \
+    /usr/bin/tail ^-c [0-9]+ -- /var/log/modsec_audit\.log$, \
+    /usr/bin/tail ^-c [0-9]+ -- /var/log/nginx/error\.log$, \
     /usr/bin/true
 ```
 
@@ -241,6 +242,8 @@ sudo visudo -cf /etc/sudoers.d/tamiz
 ```
 
 Usa rutas completas (`command -v nginx`). `examples/sudoers-tamiz` trae la variante para Apache.
+
+Las líneas de `tail` son expresiones regulares (`^…$`, sudo 1.9.10 o mayor; revísalo con `sudo --version`). No las cambies por `tail -c * -- <log>`: en sudoers un `*` también acepta espacios, así que `tail -c 1 /etc/shadow -- <log>` coincidiría y el usuario `tamiz` podría leer cualquier archivo como root. Con un sudo más viejo (RHEL/Oracle Linux 7 y 8, y 9 antes de 9.8, traen 1.9.5 o anterior), deja fuera las líneas de `tail`: todo lo demás funciona, pero Tamiz no podrá leer los logs de ese destino.
 
 ### 4. Diagnóstico
 

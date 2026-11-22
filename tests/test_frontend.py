@@ -71,3 +71,16 @@ def test_router_views_exist():
         view = JS / "views" / f"{name}.js"
         assert view.exists(), f"views/{name}.js missing"
         assert "render" in exports(view), f"views/{name}.js does not export render"
+
+
+def test_sudoers_tail_rule_is_anchored():
+    """In sudoers a * in the arguments also matches spaces: "tail -c * -- log"
+    would allow "tail -c 1 /etc/shadow -- log". The suggested rule must use an
+    anchored regular expression that only accepts a byte count."""
+    src = (JS / "views/target-form.js").read_text(encoding="utf-8")
+    assert "cmds.push(`tail -c * --" not in src
+    assert "tail ^-c [0-9]+ -- " in src
+    for doc in ("README.md", "README.es.md", "examples/sudoers-tamiz"):
+        text = (STATIC.parents[1] / doc).read_text(encoding="utf-8")
+        rules = [ln for ln in text.splitlines() if "/usr/bin/tail " in ln and not ln.lstrip().startswith("#")]
+        assert rules and all("tail ^-c [0-9]+ -- " in ln for ln in rules), doc

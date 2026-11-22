@@ -260,14 +260,24 @@ function snippet(form, v, presets) {
     ${codeBlock(p.include_snippet)}<p class="hint faint">${t("tform.include_snippet_hint")}</p>`);
 }
 
+// A literal path inside a sudoers regular expression: escape the regex
+// metacharacters and the characters sudoers itself treats as special
+// (# would start a comment and break the whole rule).
+function sudoersRegex(path) {
+  return path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/[,:=#]/g, "\\$&");
+}
+
 function sudoers(form, v) {
   const el = $("#sudoers", form);
   const mode = v.commands.sudo_mode;
   if (v.transport !== "ssh" || mode === "none") { el.innerHTML = ""; return; }
   const user = (v.conn && v.conn.username) || "tamiz";
   const cmds = [v.commands.validate, v.commands.reload, v.commands.discover].filter(Boolean);
+  // Not "tail -c * -- <log>": in sudoers a * also matches spaces, so it would
+  // let "tail -c 1 /etc/shadow -- <log>" through and read any file as root.
+  // A regular expression (sudo 1.9.10+) allows only a byte count.
   for (const k of ["audit_log", "error_log"]) {
-    if (v.logs[k] && v.logs[k].startsWith("/")) cmds.push(`tail -c * -- ${v.logs[k]}`);
+    if (v.logs[k] && v.logs[k].startsWith("/")) cmds.push(`tail ^-c [0-9]+ -- ${sudoersRegex(v.logs[k])}$`);
   }
   if (mode === "all") cmds.push("sh");
   cmds.push("true");

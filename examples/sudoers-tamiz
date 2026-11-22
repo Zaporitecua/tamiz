@@ -5,13 +5,17 @@
 # sudo mode "commands": Tamiz writes its own directories as the user (give it
 # ownership: chown -R tamiz: /etc/nginx/modsec/tamiz) and only needs sudo to
 # validate, reload, discover the configuration and read the logs.
+# The tail lines are regular expressions (sudo 1.9.10+). Never use
+# "tail -c * -- <log>": a * also matches spaces, so "tail -c 1 /etc/shadow --
+# <log>" would match and read any file as root. Older sudo: drop the tail lines.
 tamiz ALL=(root) NOPASSWD: /usr/sbin/nginx -t, /usr/sbin/nginx -s reload, /usr/sbin/nginx -T, \
-    /usr/bin/tail -c * -- /var/log/modsec_audit.log, /usr/bin/tail -c * -- /var/log/nginx/error.log, \
+    /usr/bin/tail ^-c [0-9]+ -- /var/log/modsec_audit\.log$, \
+    /usr/bin/tail ^-c [0-9]+ -- /var/log/nginx/error\.log$, \
     /usr/bin/true
 
 # Apache httpd (RHEL family uses /usr/sbin/apachectl as well):
 # tamiz ALL=(root) NOPASSWD: /usr/sbin/apachectl -t, /usr/sbin/apachectl graceful, \
-#     /usr/sbin/apachectl -t -D DUMP_INCLUDES, /usr/bin/tail -c * -- /var/log/httpd/modsec_audit.log, /usr/bin/true
+#     /usr/sbin/apachectl -t -D DUMP_INCLUDES, /usr/bin/tail ^-c [0-9]+ -- /var/log/httpd/modsec_audit\.log$, /usr/bin/true
 
 # sudo mode "all" (needed to edit root-owned files such as REQUEST-900... or
 # to retire imported rules from them) also requires running a shell, which is
