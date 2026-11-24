@@ -91,11 +91,11 @@ function shell() {
         </nav>
         <div class="rail-foot">
           <div class="rail-user"><span><strong>${user.display_name || user.username}</strong><br>${t("role." + user.role)}</span>
-            ${state.mode === "local" ? html`<button class="btn btn-quiet btn-icon" data-action="logout" title="${t("nav.logout")}" aria-label="${t("nav.logout")}">${icon("logout")}</button>` : ""}
+            ${state.mode === "local" ? html`<button type="button" class="btn btn-quiet btn-icon" data-action="logout" title="${t("nav.logout")}" aria-label="${t("nav.logout")}">${icon("logout")}</button>` : ""}
           </div>
           <div class="rail-tools">
-            <button class="btn btn-quiet btn-sm" data-action="theme" aria-label="${t("nav.theme")}">${themeIcon()}</button>
-            <button class="btn btn-quiet btn-sm" data-action="lang">${lang() === "es" ? "English" : "Español"}</button>
+            <button type="button" class="btn btn-quiet btn-sm" data-action="theme" aria-label="${t("nav.theme")}">${themeIcon()}</button>
+            <button type="button" class="btn btn-quiet btn-sm" data-action="lang">${lang() === "es" ? "English" : "Español"}</button>
           </div>
           <span class="faint">v${state.version}</span>
         </div>

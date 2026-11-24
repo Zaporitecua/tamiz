@@ -13,7 +13,7 @@ export async function render(root) {
   mount(root, html`
     <div class="page-head">
       <div><h1>${t("nav.groups")}</h1><p>${t("groups.intro")}</p></div>
-      <div class="page-actions">${can("editor") ? html`<button class="btn btn-primary" data-action="new">${icon("plus")} ${t("groups.new")}</button>` : ""}</div>
+      <div class="page-actions">${can("editor") ? html`<button type="button" class="btn btn-primary" data-action="new">${icon("plus")} ${t("groups.new")}</button>` : ""}</div>
     </div>
     ${groups.length ? html`<div class="table-wrap"><table class="table">
       <thead><tr><th>${t("groups.name")}</th><th>${t("groups.ids")}</th><th>${t("groups.usage")}</th><th>${t("nav.exclusions")}</th><th>${t("nav.targets")}</th></tr></thead>
@@ -26,7 +26,7 @@ export async function render(root) {
         <td>${g.target_ids.length ? g.target_ids.map((i) => tname[i]).join(", ") : html`<span class="faint">${t("groups.not_deployed")}</span>`}</td>
       </tr>`)}</tbody></table></div>`
       : emptyState(t("groups.empty_title"), t("groups.empty_text"),
-          can("editor") ? html`<button class="btn btn-primary" data-action="new">${icon("plus")} ${t("groups.new")}</button>` : "")}`);
+          can("editor") ? html`<button type="button" class="btn btn-primary" data-action="new">${icon("plus")} ${t("groups.new")}</button>` : "")}`);
 
   on(root, "click", "tr.clickable", (ev, tr) => go(`/groups/${tr.dataset.id}`));
   on(root, "click", "[data-action=new]", () => groupDialog(null, targets));

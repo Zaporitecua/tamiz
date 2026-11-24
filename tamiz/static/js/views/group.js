@@ -22,7 +22,7 @@ export async function render(root, [id]) {
         <p><span class="mono">${g.slug}</span> <span class="faint">${t("groups.ids")}:</span> <span class="mono">${g.id_ranges}</span>
           ${g.description ? html`<br>${g.description}` : ""}</p></div>
       <div class="page-actions">
-        ${can("editor") ? html`<button class="btn" data-action="edit">${icon("edit")} ${t("common.edit")}</button>
+        ${can("editor") ? html`<button type="button" class="btn" data-action="edit">${icon("edit")} ${t("common.edit")}</button>
           <a class="btn btn-primary" href="#/exclusions/new?group=${g.id}">${icon("plus")} ${t("excl.new")}</a>` : ""}
       </div>
     </div>
@@ -46,12 +46,12 @@ export async function render(root, [id]) {
 
     <section class="section">
       <div class="section-head"><div><h2>${t("renumber.title")}</h2><p>${t("renumber.intro")}</p></div>
-        <button class="btn" data-action="plan">${t("renumber.preview")}</button></div>
+        <button type="button" class="btn" data-action="plan">${t("renumber.preview")}</button></div>
       ${outside.length ? html`<div class="notice warn">${t("renumber.outside", { n: outside.length })}</div>` : ""}
       <div id="renumber"></div>
     </section>
 
-    ${can("editor") && !items.length ? html`<section class="section"><button class="btn btn-danger" data-action="delete">${icon("trash")} ${t("groups.delete")}</button></section>` : ""}`);
+    ${can("editor") && !items.length ? html`<section class="section"><button type="button" class="btn btn-danger" data-action="delete">${icon("trash")} ${t("groups.delete")}</button></section>` : ""}`);
 
   on(root, "click", "tr.clickable", (ev, tr) => go(`/exclusions/${tr.dataset.id}`));
   on(root, "click", "[data-action=edit]", () => groupDialog(g, targets));
@@ -65,7 +65,7 @@ export async function render(root, [id]) {
         <tbody>${p.changes.map((c) => html`<tr><td class="id">${c.old}</td><td class="id">${c.new > 0 ? c.new : t("renumber.new_block")}</td><td>${c.reason}</td></tr>`)}</tbody></table></div>
         ${p.blocks_to_release.length ? html`<p class="hint">${t("renumber.release", { blocks: p.blocks_to_release.join(", ") })}</p>` : ""}
         <p class="notice section">${t("renumber.after")}</p>
-        ${can("editor") ? html`<div class="form-actions"><button class="btn btn-primary" data-action="renumber">${t("renumber.apply", { n: p.changes.length })}</button></div>` : ""}`);
+        ${can("editor") ? html`<div class="form-actions"><button type="button" class="btn btn-primary" data-action="renumber">${t("renumber.apply", { n: p.changes.length })}</button></div>` : ""}`);
     });
   });
   on(root, "click", "[data-action=renumber]", async (ev, b) => {

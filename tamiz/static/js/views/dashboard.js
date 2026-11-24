@@ -47,7 +47,7 @@ function draw(root, data) {
         <p class="hero-sub">${s.sub} ${t("dash.counts", { exclusions: c.enabled, groups: c.groups })}</p>
       </div>
       <div class="page-actions">
-        ${data.targets.length ? html`<button class="btn" data-action="check-all">${icon("refresh")} ${t("dash.check_all")}</button>` : ""}
+        ${data.targets.length ? html`<button type="button" class="btn" data-action="check-all">${icon("refresh")} ${t("dash.check_all")}</button>` : ""}
         ${can("editor") ? html`<a class="btn btn-primary" href="#/exclusions/new">${icon("plus")} ${t("excl.new")}</a>` : ""}
       </div>
     </div>

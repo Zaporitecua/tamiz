@@ -57,12 +57,12 @@ async function users(pane) {
   const list = await get("users");
   mount(pane, html`
     <div class="section-head"><div><h2>${t("users.title")}</h2><p>${t("users.intro")}</p></div>
-      ${state.mode === "local" ? html`<button class="btn btn-primary" data-action="new-user">${icon("plus")} ${t("users.new")}</button>` : ""}</div>
+      ${state.mode === "local" ? html`<button type="button" class="btn btn-primary" data-action="new-user">${icon("plus")} ${t("users.new")}</button>` : ""}</div>
     <div class="table-wrap"><table class="table"><thead><tr><th>${t("users.name")}</th><th>${t("users.role")}</th><th>${t("users.source")}</th><th>${t("users.last_login")}</th><th></th></tr></thead>
       <tbody>${list.map((u) => html`<tr class="${u.disabled ? "disabled" : ""}"><td><div class="cell-main">${u.username}</div><div class="cell-sub">${u.display_name}</div></td>
         <td>${t("role." + u.role)}${u.disabled ? html` <span class="tag">${t("users.disabled")}</span>` : ""}</td><td>${u.source}</td>
         <td>${u.last_login_at ? timeTag(u.last_login_at) : html`<span class="faint">${t("common.never")}</span>`}</td>
-        <td class="actions"><button class="btn btn-sm" data-edit-user="${u.id}">${t("common.edit")}</button></td></tr>`)}</tbody></table></div>
+        <td class="actions"><button type="button" class="btn btn-sm" data-edit-user="${u.id}">${t("common.edit")}</button></td></tr>`)}</tbody></table></div>
     <div class="notice section">${t("users.roles_help")}</div>`);
 
   const roleSelect = (value) => html`<select class="select" name="role">${["viewer", "editor", "admin"].map((r) => html`<option value="${r}" ${r === value ? "selected" : ""}>${t("role." + r)}</option>`)}</select>`;
@@ -113,11 +113,11 @@ async function tokens(pane) {
   const list = state.user.id ? await get("tokens") : [];
   mount(pane, html`
     <div class="section-head"><div><h2>${t("tok.title")}</h2><p>${t("tok.intro")}</p></div>
-      ${state.user.id ? html`<button class="btn btn-primary" data-action="new-token">${icon("plus")} ${t("tok.new")}</button>` : ""}</div>
+      ${state.user.id ? html`<button type="button" class="btn btn-primary" data-action="new-token">${icon("plus")} ${t("tok.new")}</button>` : ""}</div>
     ${list.length ? html`<div class="table-wrap"><table class="table"><thead><tr><th>${t("tok.name")}</th><th>${t("tok.prefix")}</th><th>${t("tok.created")}</th><th>${t("tok.used")}</th><th>${t("tok.expires")}</th><th></th></tr></thead>
       <tbody>${list.map((k) => html`<tr><td>${k.name}</td><td class="mono">tmz_${k.prefix}_…</td><td>${timeTag(k.created_at)}</td>
         <td>${k.last_used_at ? timeTag(k.last_used_at) : html`<span class="faint">${t("common.never")}</span>`}</td><td>${k.expires_at ? k.expires_at.slice(0, 10) : t("tok.no_expiry")}</td>
-        <td class="actions"><button class="btn btn-sm btn-danger" data-revoke="${k.id}">${t("tok.revoke")}</button></td></tr>`)}</tbody></table></div>`
+        <td class="actions"><button type="button" class="btn btn-sm btn-danger" data-revoke="${k.id}">${t("tok.revoke")}</button></td></tr>`)}</tbody></table></div>`
       : html`<p class="muted">${state.user.id ? t("tok.none") : t("tok.need_user")}</p>`}
     <h3 class="section">${t("tok.usage")}</h3>
     <pre class="code wrap">curl -H "Authorization: Bearer tmz_..." ${location.origin}${location.pathname}api/dashboard</pre>`);
@@ -165,11 +165,11 @@ async function account(pane) {
 async function data(pane) {
   mount(pane, html`
     <section class="panel"><h2>${t("data.export")}</h2><p>${t("data.export_text")}</p>
-      <button class="btn" data-action="export">${icon("download")} ${t("data.export_btn")}</button></section>
+      <button type="button" class="btn" data-action="export">${icon("download")} ${t("data.export_btn")}</button></section>
     ${can("editor") ? html`<section class="panel"><h2>${t("data.import")}</h2><p>${t("data.import_text")}</p>
       <div class="row"><input type="file" id="jf" accept="application/json,.json">
       <label class="check"><input type="checkbox" id="keep"> ${t("data.keep_ids")}</label>
-      <button class="btn" data-action="import">${icon("import")} ${t("data.import_btn")}</button></div></section>` : ""}
+      <button type="button" class="btn" data-action="import">${icon("import")} ${t("data.import_btn")}</button></div></section>` : ""}
     <section class="panel"><h2>${t("data.backup")}</h2><p>${t("data.backup_text")}</p></section>`);
   on(pane, "click", "[data-action=export]", (ev, b) => busy(b, () => download("io/export", "tamiz-export.json").catch(toastError)));
   on(pane, "click", "[data-action=import]", async (ev, b) => {

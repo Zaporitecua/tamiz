@@ -33,11 +33,11 @@ export function modal({ title, body, actions = [], wide = false, onClose }) {
   d.className = "modal" + (wide ? " wide" : "");
   d.innerHTML = String(html`
     <div class="modal-head"><h2>${title}</h2>
-      <button class="btn btn-quiet btn-icon" data-close aria-label="${t("common.close")}">${icon("x")}</button>
+      <button type="button" class="btn btn-quiet btn-icon" data-close aria-label="${t("common.close")}">${icon("x")}</button>
     </div>
     <div class="modal-body">${body}</div>
     ${actions.length ? html`<div class="modal-foot">${actions.map((a, i) =>
-      html`<button class="btn ${a.kind ? "btn-" + a.kind : ""}" data-i="${i}">${a.label}</button>`)}</div>` : ""}
+      html`<button type="button" class="btn ${a.kind ? "btn-" + a.kind : ""}" data-i="${i}">${a.label}</button>`)}</div>` : ""}
   `);
   document.body.appendChild(d);
   applyDynamic(d);
@@ -195,19 +195,41 @@ export function diffBlock(diff) {
 }
 
 export function copyButton(text) {
-  return html`<button class="btn btn-quiet btn-icon" data-copy="${text}" title="${t("common.copy")}" aria-label="${t("common.copy")}">${icon("copy")}</button>`;
+  return html`<button type="button" class="btn btn-quiet btn-icon" data-copy="${text}" title="${t("common.copy")}" aria-label="${t("common.copy")}">${icon("copy")}</button>`;
 }
 
 document.addEventListener("click", async (ev) => {
   const b = ev.target.closest("[data-copy]");
   if (!b) return;
+  ev.preventDefault();
   try {
-    await navigator.clipboard.writeText(b.dataset.copy);
+    await copyText(b.dataset.copy);
     toast(t("common.copied"));
   } catch {
     toast(t("common.copy_failed"), "warn");
   }
 });
+
+// navigator.clipboard only exists in a secure context (HTTPS or localhost).
+// Tamiz is often opened over plain HTTP on an internal address, so fall back
+// to a hidden textarea and execCommand("copy"), which still works there.
+async function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.className = "visually-hidden";
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    if (!document.execCommand("copy")) throw new Error("copy failed");
+  } finally {
+    ta.remove();
+  }
+}
 
 export function emptyState(title, text, action) {
   return html`<div class="empty"><h3>${title}</h3><p>${text}</p>${action || ""}</div>`;

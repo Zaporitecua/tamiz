@@ -50,7 +50,7 @@ async function changes(pane, target) {
       } catch (e) {
         mount(pane, html`<div class="notice error"><p><strong>${t("plan.check_failed")}</strong></p><p>${errorText(e)}</p>
           ${e.code === "host_key_mismatch" ? html`<p>${t("plan.host_key_help", e.params)}</p>` : ""}</div>
-          <p class="section"><button class="btn" data-action="recheck">${icon("refresh")} ${t("plan.retry")}</button></p>`);
+          <p class="section"><button type="button" class="btn" data-action="recheck">${icon("refresh")} ${t("plan.retry")}</button></p>`);
       }
     };
     if (btn) await busy(btn, run); else await run();
@@ -67,7 +67,7 @@ async function changes(pane, target) {
         <div><div class="summary">${stateRim(s.status, t("plan.status_" + s.status, { n: s.changes }))}</div>
           ${target.last_check_at ? html`<div class="cell-sub">${t("plan.checked")} ${timeTag(new Date().toISOString())}</div>` : ""}</div>
         <div class="row">
-          <button class="btn" data-action="recheck">${icon("refresh")} ${t("target.check")}</button>
+          <button type="button" class="btn" data-action="recheck">${icon("refresh")} ${t("target.check")}</button>
           ${actions(s, isExport, pendingReview, approved)}
         </div>
       </div>
@@ -83,14 +83,14 @@ async function changes(pane, target) {
   function actions(s, exp, pendingReview, approved) {
     if (!can("editor") || s.status !== "pending") return "";
     if (exp) {
-      return html`<button class="btn" data-action="bundle">${icon("download")} ${t("plan.bundle")}</button>
-        <button class="btn btn-primary" data-action="mark">${icon("check")} ${t("plan.mark_deployed")}</button>`;
+      return html`<button type="button" class="btn" data-action="bundle">${icon("download")} ${t("plan.bundle")}</button>
+        <button type="button" class="btn btn-primary" data-action="mark">${icon("check")} ${t("plan.mark_deployed")}</button>`;
     }
     if (target.require_review && !approved) {
-      return pendingReview ? "" : html`<button class="btn btn-primary" data-action="request-review">${t("review.request")}</button>`;
+      return pendingReview ? "" : html`<button type="button" class="btn btn-primary" data-action="request-review">${t("review.request")}</button>`;
     }
     return html`<label class="check"><input type="checkbox" id="reload" checked> ${t("plan.reload")}</label>
-      <button class="btn btn-primary" data-action="apply" ${approved ? html`data-review="${approved.id}"` : ""}>${icon("apply")} ${t("plan.apply")}</button>`;
+      <button type="button" class="btn btn-primary" data-action="apply" ${approved ? html`data-review="${approved.id}"` : ""}>${icon("apply")} ${t("plan.apply")}</button>`;
   }
 
   function reviewBox(pendingReview, approved) {
@@ -98,8 +98,8 @@ async function changes(pane, target) {
     if (!pendingReview) return html`<div class="notice">${t("review.needed")}</div>`;
     return html`<div class="notice"><p>${t("review.waiting", { who: pendingReview.requested_by })}</p>
       ${pendingReview.note ? html`<p>“${pendingReview.note}”</p>` : ""}
-      ${can("editor") ? html`<div class="row"><button class="btn btn-sm btn-primary" data-review-decide="approve" data-id="${pendingReview.id}">${t("review.approve")}</button>
-        <button class="btn btn-sm btn-danger" data-review-decide="reject" data-id="${pendingReview.id}">${t("review.reject")}</button></div>` : ""}</div>`;
+      ${can("editor") ? html`<div class="row"><button type="button" class="btn btn-sm btn-primary" data-review-decide="approve" data-id="${pendingReview.id}">${t("review.approve")}</button>
+        <button type="button" class="btn btn-sm btn-danger" data-review-decide="reject" data-id="${pendingReview.id}">${t("review.reject")}</button></div>` : ""}</div>`;
   }
 
   function fileOp(o) {
@@ -110,7 +110,7 @@ async function changes(pane, target) {
         <span class="mono">${o.path}</span>
         <span class="row">${stateRim(o.action === "none" ? "in_sync" : o.action, t("op." + o.action))}
           ${o.forced ? html`<span class="tag error">${t("plan.forced")}</span>` : ""}
-          ${forceable && can("editor") ? html`<button class="btn btn-sm btn-danger" data-force="${o.path}">${o.forced ? t("plan.unforce") : t("plan.force")}</button>` : ""}</span>
+          ${forceable && can("editor") ? html`<button type="button" class="btn btn-sm btn-danger" data-force="${o.path}">${o.forced ? t("plan.unforce") : t("plan.force")}</button>` : ""}</span>
       </header>
       <div class="units">
         ${o.units.map((u) => html`<div class="row">${stateRim(u.state, t("ustate." + u.state))}
@@ -276,7 +276,7 @@ async function order(pane, target) {
   const dir = (p) => p.slice(0, p.length - base(p).length);
   mount(pane, html`
     <div class="section-head"><div><h2>${t("order.title")}</h2><p>${t("order.intro", { source: t("lsource." + report.source) })}</p></div>
-      <button class="btn" data-action="reload-order">${icon("refresh")} ${t("order.refresh")}</button></div>
+      <button type="button" class="btn" data-action="reload-order">${icon("refresh")} ${t("order.refresh")}</button></div>
     <div class="stack-wrap">
       <ol class="sieves">${bands.map((b) => {
         const chk = checks[b.path];
@@ -339,7 +339,7 @@ async function files(pane, target, groups) {
       <div class="table-wrap"><table class="table"><thead><tr><th>${t("files.path")}</th><th>${t("common.state")}</th><th>${t("common.when")}</th><th></th></tr></thead>
       <tbody>${target.retirements.map((r) => html`<tr><td class="mono">${r.path}</td><td>${stateRim(r.status, t("rstate." + r.status))}</td>
         <td>${timeTag(r.created_at)} <span class="faint">${r.created_by}</span></td>
-        <td class="actions">${r.status === "pending" && can("editor") ? html`<button class="btn btn-sm" data-cancel-ret="${r.id}">${t("common.cancel")}</button>` : ""}</td></tr>`)}
+        <td class="actions">${r.status === "pending" && can("editor") ? html`<button type="button" class="btn btn-sm" data-cancel-ret="${r.id}">${t("common.cancel")}</button>` : ""}</td></tr>`)}
       </tbody></table></div></section>` : ""}`);
 
   const form = $("#gform", pane);
@@ -364,7 +364,7 @@ async function files(pane, target, groups) {
 // ------------------------------------------------------------- diagnose ----
 async function diagnose(pane, target) {
   mount(pane, html`<div class="section-head"><div><h2>${t("diag.title")}</h2><p>${t("diag.intro")}</p></div>
-    <button class="btn btn-primary" data-action="diag">${icon("stethoscope")} ${t("diag.run")}</button></div><div id="diag-out"></div>`);
+    <button type="button" class="btn btn-primary" data-action="diag">${icon("stethoscope")} ${t("diag.run")}</button></div><div id="diag-out"></div>`);
   on(pane, "click", "[data-action=diag]", async (ev, b) => {
     await busy(b, async () => {
       try {
@@ -409,14 +409,14 @@ async function config(pane, target, groups) {
           <dt>${t("tform.require_review")}</dt><dd>${target.require_review ? t("common.yes") : t("common.no")}</dd>
           ${Object.keys(hk).length ? html`<dt>${t("config.host_key")}</dt><dd class="mono">${Object.entries(hk).map(([k, v]) => html`${k}: ${v}<br>`)}</dd>` : ""}
         </dl>
-        ${can("admin") && Object.keys(hk).length ? html`<button class="btn btn-sm" data-action="reset-key">${t("config.reset_key")}</button>` : ""}
+        ${can("admin") && Object.keys(hk).length ? html`<button type="button" class="btn btn-sm" data-action="reset-key">${t("config.reset_key")}</button>` : ""}
         ${can("editor") && target.transport !== "export" ? html`<div class="row section">
-          <button class="btn" data-run="validate">${t("config.run_validate")}</button>
-          <button class="btn" data-run="reload">${t("config.run_reload")}</button></div>` : ""}
+          <button type="button" class="btn" data-run="validate">${t("config.run_validate")}</button>
+          <button type="button" class="btn" data-run="reload">${t("config.run_reload")}</button></div>` : ""}
       </section>
       <section>
         ${target.include_snippet ? html`<div class="code-title"><span>${t("tform.include_snippet")}</span>${copyButton(target.include_snippet)}</div>${codeBlock(target.include_snippet)}` : ""}
-        ${can("admin") ? html`<div class="section"><button class="btn btn-danger" data-action="delete">${icon("trash")} ${t("config.delete")}</button>
+        ${can("admin") ? html`<div class="section"><button type="button" class="btn btn-danger" data-action="delete">${icon("trash")} ${t("config.delete")}</button>
           <p class="hint faint">${t("config.delete_hint")}</p></div>` : ""}
       </section>
     </div>`);

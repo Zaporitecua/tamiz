@@ -79,7 +79,7 @@ function results(box, r) {
   mount(box, html`
     <div class="section-head"><div><h2>${t("an.findings", { n: r.findings.length })}</h2>
       <p>${t("an.summary", { tx: r.transactions, blocked: r.blocked, formats: r.formats.join(", ") || "?" })}</p></div>
-      ${can("editor") ? html`<button class="btn" data-action="merge" disabled>${t("an.merge")}</button>` : ""}</div>
+      ${can("editor") ? html`<button type="button" class="btn" data-action="merge" disabled>${t("an.merge")}</button>` : ""}</div>
     ${scoring ? html`<div class="notice">${t("an.scoring", { rules: scoring })}</div>` : ""}
     <div class="section">${r.findings.length ? r.findings.map((f, i) => finding(f, i)) : html`<p class="muted">${t("an.only_scoring")}</p>`}</div>`);
 
@@ -114,7 +114,7 @@ function finding(f, i) {
       ${f.covered_by.length ? html`<span class="tag ok">${t("an.covered", { ids: f.covered_by.map((x) => "#" + x).join(", ") })}</span>` : ""}
       <span class="faint">${t("an.suggestion")}: ${t("action_kind." + s.action)}${s.variables.length ? ` ${s.variables.join(", ")}` : ""}, ${s.conditions.map(condition).join(` ${t("describe.and")} `)}</span>
       ${can("editor") ? html`<label class="check"><input type="checkbox" data-pick="${i}"> ${t("an.select")}</label>
-        <button class="btn btn-sm btn-primary" data-create="${i}">${icon("plus")} ${t("an.create")}</button>` : ""}
+        <button type="button" class="btn btn-sm btn-primary" data-create="${i}">${icon("plus")} ${t("an.create")}</button>` : ""}
     </div>
   </article>`;
 }

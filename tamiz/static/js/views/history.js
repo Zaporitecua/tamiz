@@ -18,7 +18,7 @@ export async function render(root) {
         <option value="group">${t("nav.groups")}</option><option value="user">${t("hist.users")}</option></select>
     </div>
     <ul class="activity" id="list"></ul>
-    <div class="section"><button class="btn" id="more" hidden>${t("hist.more")}</button></div>`);
+    <div class="section"><button type="button" class="btn" id="more" hidden>${t("hist.more")}</button></div>`);
 
   let lastId = null;
   const load = async (append) => {

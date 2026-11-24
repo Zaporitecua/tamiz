@@ -25,7 +25,7 @@ export async function render(root) {
       <div class="section" data-mode="paste">
         <div class="field"><label for="txt">${t("imp.paste_label")}</label><textarea class="textarea mono" id="txt" rows="8" spellcheck="false"></textarea></div>
       </div>
-      <div class="form-actions"><button class="btn btn-primary" data-action="scan">${t("imp.scan")}</button></div>
+      <div class="form-actions"><button type="button" class="btn btn-primary" data-action="scan">${t("imp.scan")}</button></div>
     </div>
     <div id="scan" class="section"></div>`);
 
@@ -144,6 +144,6 @@ function drawScan(box, s, groups) {
       <p class="hint faint">${t("imp.renumber_hint")}</p>
       ${s.target_id && s.can_retire ? html`<label class="check section"><input type="checkbox" id="retire" checked> ${t("imp.retire")}</label>
         <p class="hint faint">${t("imp.retire_hint")}</p>` : ""}
-      <div class="form-actions"><button class="btn btn-primary" data-action="commit">${icon("import")} ${t("imp.commit")}</button></div>
+      <div class="form-actions"><button type="button" class="btn btn-primary" data-action="commit">${icon("import")} ${t("imp.commit")}</button></div>
     </div>`);
 }

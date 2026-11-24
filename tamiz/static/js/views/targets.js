@@ -66,6 +66,6 @@ function row(x, names) {
     <td><div class="mono">${where(x)}</div><div class="cell-sub">${t("transport." + x.transport)}</div></td>
     <td>${x.group_ids.length ? x.group_ids.map((g) => names[g]).filter(Boolean).join(", ") : html`<span class="faint">${t("common.none")}</span>`}</td>
     <td>${x.last_check_at ? timeTag(x.last_check_at) : html`<span class="faint">${t("common.never")}</span>`}</td>
-    <td class="actions">${x.enabled ? html`<button class="btn btn-sm" data-check="${x.id}">${icon("refresh")} ${t("target.check")}</button>` : ""}</td>
+    <td class="actions">${x.enabled ? html`<button type="button" class="btn btn-sm" data-check="${x.id}">${icon("refresh")} ${t("target.check")}</button>` : ""}</td>
   </tr>`;
 }

@@ -84,3 +84,12 @@ def test_sudoers_tail_rule_is_anchored():
         text = (STATIC.parents[1] / doc).read_text(encoding="utf-8")
         rules = [ln for ln in text.splitlines() if "/usr/bin/tail " in ln and not ln.lstrip().startswith("#")]
         assert rules and all("tail ^-c [0-9]+ -- " in ln for ln in rules), doc
+
+
+def test_buttons_declare_type():
+    """A <button> without type inside a <form> is a submit button: the copy
+    button of the sudoers rule saved the target form when clicked."""
+    for f in js_files():
+        for m in re.finditer(r"<button(?![^>]*\btype=)", f.read_text(encoding="utf-8")):
+            line = f.read_text(encoding="utf-8")[: m.start()].count("\n") + 1
+            pytest.fail(f"{f.name}:{line}: <button> without type")
