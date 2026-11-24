@@ -174,6 +174,16 @@ def test_roles_and_csrf(client, cfg):
         assert other.post("/api/auth/logout").status_code == 403  # missing CSRF header
 
 
+def test_static_files_are_revalidated(client):
+    """Without Cache-Control the browser kept the old JavaScript after an upgrade."""
+    r = client.get("/static/js/app.js")
+    assert r.status_code == 200 and r.headers["cache-control"] == "no-cache"
+    again = client.get("/static/js/app.js", headers={"If-None-Match": r.headers["etag"]})
+    assert again.status_code == 304 and again.headers["cache-control"] == "no-cache"
+    assert client.get("/").headers["cache-control"] == "no-cache"
+    assert client.get("/api/health").headers["cache-control"] == "no-store"
+
+
 def test_empty_file_at_a_managed_path_is_adopted(client, tmp_path):
     # Admins create empty placeholder files so a new Include glob matches
     # before Tamiz's first apply; those must not block the plan as "foreign".

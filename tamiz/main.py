@@ -91,6 +91,10 @@ async def authenticate(request: Request, call_next):
     response = await call_next(request)
     if path.startswith("/api/"):
         response.headers["Cache-Control"] = "no-store"
+    elif path.startswith("/static/"):
+        # Revalidate on every load (StaticFiles answers 304 by ETag), so after
+        # an upgrade the browser never keeps running the old JavaScript.
+        response.headers["Cache-Control"] = "no-cache"
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("Referrer-Policy", "same-origin")
     response.headers.setdefault("X-Frame-Options", "DENY")
