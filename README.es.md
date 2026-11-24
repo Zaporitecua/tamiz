@@ -451,7 +451,7 @@ WantedBy=multi-user.target
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
-python3 -m pytest -q                       # 77 passed, 3 skipped (los laboratorios con WAF reales)
+python3 -m pytest -q                       # 79 passed, 3 skipped (los laboratorios con WAF reales)
 for f in tamiz/static/js/*.js tamiz/static/js/views/*.js; do node --check "$f"; done
 mkdir -p data keys waf
 TAMIZ_DATA_DIR=./data TAMIZ_KEYS_DIR=./keys TAMIZ_LOCAL_ROOTS=$PWD/waf \
