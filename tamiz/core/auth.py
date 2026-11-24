@@ -276,10 +276,23 @@ def ensure_setup_code(conn: sqlite3.Connection) -> str | None:
 
 
 def bootstrap_admin(conn: sqlite3.Connection) -> bool:
+    """Create the first administrator from TAMIZ_ADMIN_USER/TAMIZ_ADMIN_PASSWORD,
+    with the same checks as the setup form. If they fail, no user is created
+    and the setup code is printed instead."""
     cfg = config.get()
     if not (cfg.admin_user and cfg.admin_password) or not setup_needed(conn):
         return False
+    username = cfg.admin_user.strip()
+    if not username or len(username) > 64:
+        problem = "TAMIZ_ADMIN_USER must have 1 to 64 characters"
+    elif password_problem(cfg.admin_password):
+        problem = "TAMIZ_ADMIN_PASSWORD must have 10 to 256 characters"
+    else:
+        problem = None
+    if problem:
+        log.error("%s: no administrator created, use the setup code", problem)
+        return False
     conn.execute("INSERT INTO users(username, display_name, password_hash, role, created_at) "
-                 "VALUES (?,?,?,?,?)", (cfg.admin_user, cfg.admin_user,
+                 "VALUES (?,?,?,?,?)", (username, username,
                                         hash_password(cfg.admin_password), "admin", db.now()))
     return True

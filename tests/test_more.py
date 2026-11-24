@@ -226,6 +226,20 @@ def test_setup_code_required_for_first_admin(cfg):
         assert c.get("/api/auth/status").json()["user"]["role"] == "admin"
 
 
+def test_admin_from_environment_needs_a_valid_password(cfg, caplog):
+    """TAMIZ_ADMIN_PASSWORD skipped the 10-character minimum of the setup form."""
+    cfg.admin_password = "short"
+    from tamiz import db
+    from tamiz.main import app
+    with TestClient(app) as c:
+        c.headers["X-Tamiz"] = "1"
+        assert c.get("/api/auth/status").json()["setup_needed"] is True
+        assert c.post("/api/auth/login", json={"username": "admin", "password": "short"}).status_code == 401
+        with db.db() as conn:
+            assert db.meta_get(conn, "setup_code")
+    assert "TAMIZ_ADMIN_PASSWORD must have 10 to 256 characters" in caplog.text
+
+
 # --------------------------------------------------------------- reviews --
 
 def test_review_is_required_and_cannot_be_self_approved(client, tmp_path):

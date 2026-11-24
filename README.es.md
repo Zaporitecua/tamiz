@@ -92,7 +92,7 @@ docker compose logs tamiz | grep "setup code"
 
 Abre <http://127.0.0.1:8080>, escribe el código de instalación y crea el primer administrador (contraseña de al menos 10 caracteres). El código se vuelve a imprimir en cada arranque mientras no exista un administrador.
 
-Para no usar el código, define `TAMIZ_ADMIN_USER` y `TAMIZ_ADMIN_PASSWORD` en `.env` antes del primer arranque. Después, borra la contraseña del archivo.
+Para no usar el código, define `TAMIZ_ADMIN_USER` y `TAMIZ_ADMIN_PASSWORD` (de al menos 10 caracteres) en `.env` antes del primer arranque. Después, borra la contraseña del archivo. Si alguno no es válido, el log dice por qué y Tamiz pide el código de instalación.
 
 Comprueba que está sano:
 
@@ -451,7 +451,7 @@ WantedBy=multi-user.target
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
-python3 -m pytest -q                       # 79 passed, 3 skipped (los laboratorios con WAF reales)
+python3 -m pytest -q                       # 81 passed, 3 skipped (los laboratorios con WAF reales)
 for f in tamiz/static/js/*.js tamiz/static/js/views/*.js; do node --check "$f"; done
 mkdir -p data keys waf
 TAMIZ_DATA_DIR=./data TAMIZ_KEYS_DIR=./keys TAMIZ_LOCAL_ROOTS=$PWD/waf \
